@@ -1,0 +1,14 @@
+
+INIT struct vsf_session.p_control_line_buf,
+INIT struct vsf_session.home_str,
+INIT struct vsf_session.control_use_ssl,
+INIT struct vsf_session.data_use_ssl,
+INIT struct vsf_session.p_ssl_ctx,
+INIT struct vsf_session.p_control_ssl,
+INIT struct vsf_session.p_data_ssl,
+INIT struct vsf_session.ssl_slave_active,
+INIT struct vsf_session.ssl_slave_fd,
+INIT struct vsf_session.ssl_consumer_fd: {}
+
+hash_pid -> standalone.c/hash_pid
+hash_ip -> standalone.c/hash_ip

@@ -1,0 +1,27 @@
+This file contains notes about how Ginseng, UpStare, and we are doing testing on vsFTPd.
+
+Ginseng (from "Practical Software Updating for C"):
+13 versions modified from 1.1.0 to 2.0.3 (two of them seem nonexistant...)
+-Two performance tests were done. One for connection time and one for transfer rate.
+1) For connection time they measured "the time it took wget to request 500 files of size 0, and divided by 500".
+Results: "The updateable, updated, and streak-updated versions were 3%, 5%, and 25% slower than the stock server."
+2) For transfer rate they used a 300 MB file (not clear how they got the rate, possibly size/time).
+Results: Stock, updateable, upd. once, streak :: 7.95, 7.95, 7.97, 7.98 MB/s.
+-Memory footprint was also measured at the end of the throughput benchmark using pmap.
+Results: "The footprint increase for updateable and updated cases are overshadowed by OS variability. However for the streak updates, the median footprint increase ... is 21%."
+-Update time was under 5ms for all updates.
+-Compilation time analysis was also done.
+
+UpStare (from "Immediate Multi-Threaded Dynamic Software Updates Using Stack Reconstruction"):
+13 updates were done (14 versions) starting from 1.1.0 to 2.0.6.
+-Updates were applied on idle clients and file transfer clients.
+Results: "Updating during a large file transfer occurred at stack depth 11 ... and took 59.7 ms.
+-"We measured latency of establishing a connection and retrieving a 32-byte file 1000 times and the throughput of retrieving a 200MB file."
+Results: "Stack reconstruction slows down an updateable vsFTOd v2.0.5 by ...4.9-5.3%, multi-process support by ... 6.8-7.4% and support for blocking system calls by ... 2.9-3.8%. The worst case overhead is from memory: 1.57ms (16.5%) and 1.63ms (16.8%) when updatd to v2.0.6."
+
+In-place Ekiden:
+5 updates over 6 versions starting from 1.1.3 to 2.0.1 (Adding a few more versions would probably not be too time taking.)
+Testing: 
+
+
+

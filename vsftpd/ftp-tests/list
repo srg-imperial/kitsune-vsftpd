@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import ftp_common
+import sys
+from ftp_common import connection as conn
+from ftplib import FTP, all_errors
+
+def list_dir():
+    try:
+        ftp = FTP()
+        ftp.connect(conn['host'], conn['port'])
+        ftp.login(conn['user'], conn['passwd'])
+        ftp.cwd(ftp_common.ftp_work_folder)
+        ftp.dir()
+        ftp.quit()
+        return 0
+
+    except all_errors, inst:
+        print "EXCEPTION:", type(inst)
+        print "EXCEPTION:", inst
+        return -1
+        
+if(list_dir() == 0):
+    print sys.argv[0], "PASSED"
+    sys.exit(0)
+else:
+    print sys.argv[0], "FAILED"
+    sys.exit(1)

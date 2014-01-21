@@ -1,0 +1,45 @@
+Kitsune-enabled Vsftpd
+======================
+
+This is a version of the Very Secure FTP Server patched to support
+dynamic updating using Kitsune.
+
+The versions in the vsftpd directory have manually-written state
+transformer code in dsu.c. Versions in the vsftpd-gen directory use
+Kitsune's `xfgen` tool to automatically generate a dsu.c based on the
+directives in vsftpd.xf.
+
+Building
+========
+
+To build all versions, simply run `make` in either the vsftpd or
+vsftpd-gen directory. To build a specific version, run `make` in its
+subdirectory.
+
+If Kitsune is not installed in your PATH, the variable KITSUNE_PATH
+must refer to a valid Kitsune installation (the `bin` directory of the
+core Kitsune repository will work).
+
+vsftpd's build dependencies are libpam, libssl, and libwrap. Build
+dependencies can be easily installed on Debian-derived systems by
+running `apt-get build-dep vsfptd`.
+
+Running
+=======
+
+Use the Kitsune driver utility to run the vsftpd shared object as such:
+
+`driver vsftpd.so vsftpd.conf`
+
+Updating
+========
+
+To update vsftpd, use Kitsune's `doupd` script:
+
+`doupd <vsftpd pid> <new tor version.so>`
+
+For a dynamic update to work, the target version must have been built
+with the running version specified as its previous version. All
+versions of vsftpd are, by default, built to update from the last
+available version.
+

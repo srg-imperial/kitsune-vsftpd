@@ -1,0 +1,33 @@
+{ 
+"KitsuneSettings": {
+	"Driver":"/home/nqe/kitsune/bin/driver"
+	},
+"ProgramSettings": {
+	"_ProgramName":"vsFTPd",
+	"OriginalRoot":"/home/nqe/kitsune/examples/vsftpd/orig_vsftpd/",
+	"ModifiedRoot":"/home/nqe/kitsune/examples/vsftpd/ek_vsftpd_1pt/",
+	"_Versions": ["vsftpd-2.0.2", "vsftpd-2.0.3", "vsftpd-2.0.4",
+		"vsftpd-2.0.5", "vsftpd-2.0.6"],
+	"Versions": ["vsftpd-1.1.0", "vsftpd-1.1.1", "vsftpd-1.1.2",
+		"vsftpd-1.1.3", "vsftpd-1.2.0", "vsftpd-1.2.1","vsftpd-1.2.2",
+		"vsftpd-2.0.0", "vsftpd-2.0.1", "vsftpd-2.0.2", "vsftpd-2.0.3",
+		"vsftpd-2.0.4", "vsftpd-2.0.5", "vsftpd-2.0.6"]
+	},
+"BenchSettings": {
+	"BenchDirectory":"/home/nqe/kitsune/examples/vsftpd/ftp-tests/",
+	"BenchScript":"bench_script.rb",
+	"ConcurrentScript":"connect",
+	"NumberOfSerialRuns":90,
+	"NumberOfConcurrentConnections":30,
+	"ResultsDirectory":"results/",
+	"OutputLog":"output",
+	"TimeLogKitsune":"time_log_ek",
+	"TimeLogOriginal":"time_log_orig",
+	"MemLogKitsune":"mem_log_ek",
+	"MemLogOriginal":"mem_log_orig"
+	},
+"OutputSettings": {
+	"LatexTerse":"latex_terse.tex",
+	"LatexVerbose":"latex_verbose.tex"
+	}
+}

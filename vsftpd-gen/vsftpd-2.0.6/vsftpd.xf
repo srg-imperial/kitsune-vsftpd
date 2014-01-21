@@ -1,0 +1,2 @@
+INIT struct vsf_session.is_guest,
+INIT struct vsf_session.control_cert_digest: {}

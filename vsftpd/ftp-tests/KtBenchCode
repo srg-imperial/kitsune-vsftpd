@@ -1,0 +1,64 @@
+The following code is placed in kitsune.c to measure update time and some other resources::
+
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <unistd.h>
+struct timeval start_time, end_time;
+struct rusage usage_0, usage_1;
+void kitsune_update(char *pt_name)
+{
+  /* Record time for an update to finish */
+  if(!updating && *upd_req != 0 && strcmp(pt_name, "standalone.c") == 0) {
+    gettimeofday(&start_time, NULL);
+    if (getrusage(RUSAGE_SELF, &usage_0)) {
+      printf ("Error with rusage.\n");
+    }
+
+    /* Record memory from /proc/[pid]/status */
+    FILE *status_fp;
+    char path[40];
+    sprintf(path, "/proc/%i/status", getpid());
+    printf("%s\n", path);
+    status_fp = fopen(path, "r");
+    char line[80];
+    while (!feof(status_fp)) {
+      fgets(line, 80, status_fp);
+      printf("%s", line);
+    }
+    fclose(status_fp);
+  }
+  else if(updating && kitsune_is_updating_from(pt_name)) {  
+    start_time = *(struct timeval *) kitsune_get_val("start_time");
+    usage_0 = *(struct rusage *) kitsune_get_val("usage_0");
+    gettimeofday(&end_time, NULL);
+    if (getrusage(RUSAGE_SELF, &usage_1)) {
+      printf ("Error with rusage.\n");
+    }
+    long dif = end_time.tv_usec - start_time.tv_usec;
+    printf("Time to update from %s is %.4f ms.\n", pt_name, dif/1000.0);
+    dif = usage_1.ru_utime.tv_usec - usage_0.ru_utime.tv_usec;
+    printf("User time: %.4f ms.\n", dif/1000.0);
+    dif = usage_1.ru_stime.tv_usec - usage_0.ru_stime.tv_usec;
+    printf("System time: %.4f ms.\n", dif/1000.0);
+    printf("MaxRSS at 0: %ld kb.\n", usage_0.ru_maxrss);
+    printf("MaxRSS at 1: %ld kb.\n", usage_1.ru_maxrss);
+    printf("IdRSS at 0: %ld kb.\n", usage_0.ru_idrss);
+    printf("IdRSS at 1: %ld kb.\n", usage_1.ru_idrss);
+    printf("IsRSS at 0: %ld kb.\n", usage_0.ru_isrss);
+    printf("IsRSS at 1: %ld kb.\n", usage_1.ru_isrss);  
+ 
+    /* Record memory from /proc/[pid]/status */
+    FILE *status_fp;
+    char path[40];
+    sprintf(path, "/proc/%i/status", getpid());
+    printf("%s\n", path);
+    status_fp = fopen(path, "r");
+    char line[80];
+    while (!feof(status_fp)) {
+      fgets(line, 80, status_fp);
+      printf("%s", line);
+    }
+    fclose(status_fp);
+  }
+
+rusage does not seem to be giving reasonable data.

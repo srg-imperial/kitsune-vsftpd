@@ -1,0 +1,72 @@
+
+{    
+    #include <arpa/inet.h>
+    #include "sysutil.h"
+    #include "hash.h"
+    struct vsf_sysutil_ipv4addr_old
+    {
+        unsigned char data[4];
+    };
+    void *xform_ip_address(struct vsf_sysutil_ipv4addr_old *old_ip) {
+        void *addr = vsf_sysutil_malloc(vsf_sysutil_get_ipaddr_size());
+        vsf_sysutil_memclr(addr, vsf_sysutil_get_ipaddr_size());
+        char ip_addr_str[16];
+        sprintf(ip_addr_str, "%i.%i.%i.%i", 
+                (unsigned int)old_ip->data[0], (unsigned int)old_ip->data[1], 
+                (unsigned int)old_ip->data[2], (unsigned int)old_ip->data[3]);
+        kitsune_log("handled ip %s", ip_addr_str);
+        inet_pton(AF_INET, ip_addr_str, addr);
+        return addr;
+    }
+}
+
+standalone.c/s_p_ip_count_hash -> standalone.c/s_p_ip_count_hash: {
+    $oldtype(struct hash) *in_hash = ($oldtype(struct hash) *)$in;
+    int i;
+
+    void *hash_func = GET_NEW_GLOBAL(hash_ip);
+    assert(hash_func);
+    $out = (struct hash *)hash_alloc(256, sizeof($newtype(struct in6_addr)), 
+                                     sizeof(unsigned int), hash_func);
+
+    /* for each bucket */	
+    for (i=0; i<in_hash->buckets; i++) {
+        $oldtype(struct hash_node) *old_p_node = in_hash->p_nodes[i];
+        /* for each bucket element, rehash */
+        while(old_p_node != NULL) {                   
+            void *ip = xform_ip_address(old_p_node->p_key);
+            hash_add_entry((struct hash *)$out, ip, old_p_node->p_value);
+            free(ip);
+            old_p_node = old_p_node->p_next;
+        }
+    }
+}
+
+standalone.c/s_p_pid_ip_hash -> standalone.c/s_p_pid_ip_hash: {
+    $oldtype(struct hash) *in_hash = ($oldtype(struct hash) *)$in;
+    int i; 
+
+    void *hash_func = GET_NEW_GLOBAL(hash_pid);
+    assert(hash_func);
+    $out = (struct hash *)hash_alloc(256, sizeof(unsigned int), 
+                                     sizeof($newtype(struct in6_addr)),
+                                     hash_func);
+
+    /* for each bucket */	
+    for (i=0; i<in_hash->buckets; i++) {
+        $oldtype(struct hash_node) *old_p_node = in_hash->p_nodes[i];
+        /* for each bucket element, rehash */
+        while(old_p_node != NULL) {                
+            void *ip = xform_ip_address(old_p_node->p_value);                       
+            hash_add_entry((struct hash *)$out, old_p_node->p_key, ip);
+            kitsune_log("handled pid %d", *(int *)old_p_node->p_key);
+            free(ip);
+            old_p_node = old_p_node->p_next;
+        }
+    }
+}
+
+INIT struct vsf_session.epsv_all,
+INIT struct vsf_session.guest_user_uid,
+INIT struct vsf_session.xferlog_fd,
+INIT struct vsf_session.vsftpd_log_fd: {}

@@ -1,0 +1,5 @@
+
+INIT struct vsf_session.tcp_wrapper_ok: { $out = 1; }
+
+standalone.c/hash_pid -> hash_pid
+standalone.c/hash_ip -> hash_ip

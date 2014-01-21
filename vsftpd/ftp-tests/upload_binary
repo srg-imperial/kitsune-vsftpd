@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+
+import ftp_common as fc
+import sys
+from ftp_common import connection as conn
+from ftplib import FTP, all_errors
+#import os, time
+
+def upload_binary():
+    fc.clear_files()
+    fcopy = open(fc.bin_copy_file, "rb")
+    try:
+        ftp = FTP()
+        # Just for grins, look for pidfile here, then check to see if
+        # ps -p says it's running (like check_server.sh)
+        # ~/research/test-branch-clean/cil/test/update/vsftpd-noroot/pidfile
+        #pidfile = open('/fs/mandala/hardisty/research/test-branch-clean/cil/test/update/vsftpd-noroot/pidfile','r')
+        #pid = int(pidfile.readline())
+        #print "looking for server with pid:", pid
+        #if os.system("ps -p " + str(pid)):
+        #    print "SERVER DIED!!!!"
+        #    sys.exit(3)
+        #time.sleep(30)
+        ftp.connect(conn['host'], conn['port'])
+        ftp.login(conn['user'], conn['passwd'])
+        ftp.cwd(fc.ftp_work_folder)
+        ftp.storbinary('STOR ' + fc.bin_dest_file, fcopy)
+        fc.check_transfer(fc.bin_copy_file, fc.ftp_work_folder + '/' + fc.bin_dest_file)
+        ftp.quit()
+        return 0
+
+    except all_errors, inst:
+        print "EXCEPTION:", type(inst)
+        print "EXCEPTION:", inst
+        return -1
+        
+if(upload_binary() == 0):
+    print sys.argv[0], "PASSED"
+    sys.exit(0)
+else:
+    print sys.argv[0], "FAILED"
+    sys.exit(1)
+
+
