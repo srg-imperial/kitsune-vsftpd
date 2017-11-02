@@ -1,16 +1,25 @@
 # Makefile for systems with GNU tools
 
-# Kitsune
-SHARED = -fPIC -shared -rdynamic
-KITSUNE_INSTALL = ../../../../bin
-KITSUNE_LIB = $(KITSUNE_INSTALL)/libkitsune.a
-CILLY_PATH = ../../../../tools/bin/ktcc
+# KITSUNE
+ifdef KITSUNE_PATH
+KITSUNE_INCLUDE = -I $(KITSUNE_PATH)/include
+KITSUNE_LIB = -L $(KITSUNE_PATH)/lib
+KITSUNE_BIN = $(KITSUNE_PATH)/bin/
+else
+KITSUNE_INCLUDE =
+KITSUNE_LIB =
+KITSUNE_BIN =
+endif
 
-EKCC 	=	$(CILLY_PATH) --dostackvars --keepunused --doglobalreg
-INSTALL	=	install
+SHARED = -fPIC -shared -rdynamic
+KITSUNE_LIB := $(KITSUNE_LIB) -lkitsune
+CILLY_PATH = $(KITSUNE_BIN)ktcc
+
+EKCC    =       $(CILLY_PATH) --dostackvars --keepunused --doglobalreg
+INSTALL =       install
 IFLAGS  = -idirafter dummyinc
-CFLAGS = -O2 -fvisibility=hidden -Wall -W -Wshadow -I$(KITSUNE_INSTALL) $(SHARED) 
-#CFLAGS	=	-O2 -Wall -W -Wshadow #-pedantic -Werror -Wconversion
+CFLAGS = -ggdb3 -Wall -W -Wshadow $(KITSUNE_INCLUDE) $(SHARED)
+#CFLAGS =       -O2 -Wall -W -Wshadow #-pedantic -Werror -Wconversion
 
 LIBS	=	`./vsf_findlibs.sh` -lcrypt
 LINK	=	-Wl,-s

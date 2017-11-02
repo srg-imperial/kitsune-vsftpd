@@ -12,7 +12,7 @@ KITSUNE_INCLUDE =
 KITSUNE_LIB =
 KITSUNE_BIN =
 endif
-KITSUNE_LIB = $(KITSUNE_LIB) -lkitsune
+KITSUNE_LIB := $(KITSUNE_LIB) -lkitsune
 CILLY_PATH = $(KITSUNE_BIN)ktcc
 
 EKCC 	=	$(CILLY_PATH) --keepunused --doglobalreg --dostackvars

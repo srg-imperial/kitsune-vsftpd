@@ -119,7 +119,7 @@
 #include <linux/capability.h>
 #include <errno.h>
 #include <syscall.h>
-_syscall2(int, capset, cap_user_header_t, header, const cap_user_data_t, data)
+int capset(cap_user_header_t header, const cap_user_data_t data){ return syscall(__NR_capset, header, data); }
 /* Gross HACK to avoid warnings - linux headers overlap glibc headers */
 #undef __NFDBITS
 #undef __FDMASK

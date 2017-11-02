@@ -10,10 +10,9 @@ KITSUNE_INCLUDE =
 KITSUNE_LIB =
 KITSUNE_BIN =
 endif
-KITSUNE_LIB = $(KITSUNE_LIB) -lkitsune
 
 SHARED = -fPIC -shared -rdynamic
-KITSUNE_LIB = $(KITSUNE_LIB) -lkitsune
+KITSUNE_LIB := $(KITSUNE_LIB) -lkitsune
 CILLY_PATH = $(KITSUNE_BIN)ktcc
 
 EKCC 	=	$(CILLY_PATH) --dostackvars --keepunused --doglobalreg
@@ -23,7 +22,6 @@ CFLAGS = -ggdb3 -Wall -W -Wshadow $(KITSUNE_INCLUDE) $(SHARED)
 #CFLAGS	=	-O2 -Wall -W -Wshadow #-pedantic -Werror -Wconversion
 
 LIBS	=	`./vsf_findlibs.sh`
-LINK	=	-Wl#,-s
 
 OBJS	=	main.o utility.o prelogin.o ftpcmdio.o postlogin.o privsock.o \
 		tunables.o ftpdataio.o secbuf.o ls.o \
@@ -38,7 +36,7 @@ OBJS	=	main.o utility.o prelogin.o ftpcmdio.o postlogin.o privsock.o \
 	$(EKCC) -c $*.c $(CFLAGS) $(IFLAGS) -include kitsune.h
 
 vsftpd: $(OBJS) 
-	$(CC) -o vsftpd.so $(OBJS) $(LINK) $(LIBS) $(KITSUNE_LIB) $(SHARED)
+	$(CC) -o vsftpd.so $(OBJS) $(LIBS) $(KITSUNE_LIB) $(SHARED)
 
 install:
 	if [ -x /usr/local/sbin ]; then \
