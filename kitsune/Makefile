@@ -1,5 +1,4 @@
-#SUBDIRS = vsftpd-*.* orig_vsftpd/vsftpd-*.* ek_vsftpd_1pt
-SUBDIRS = vsftpd-*.* orig_vsftpd/vsftpd-*.*
+SUBDIRS = vsftpd-*.*
 
 .PHONY: subdirs $(SUBDIRS)
      
