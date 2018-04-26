@@ -1,1 +1,0 @@
-INIT struct vsf_session.login_fails: { $out = 0; }
